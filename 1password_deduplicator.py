@@ -27,17 +27,16 @@ def domains(item):
     s = set()
     for d in domain_parts(item):
         if d.subdomain == "www":
-            d = (d.domain, d.suffix)
-        s.add(".".join(p for p in d if p))
+            d = tldextract.ExtractResult(subdomain='', domain=d.domain, suffix=d.suffix)
+        s.add(".".join(p for p in [d.subdomain, d.domain, d.suffix] if p))
     return s
 
 
 def root_domains(item) -> set:
     """Return a set of domain names linked to the item."""
     return set(
-        ".".join(p for p in (d.domain, d.suffix) if p) for d in domain_parts(item)
+        ".".join(p for p in [d.domain, d.suffix] if p) for d in domain_parts(item)
     )
-
 
 def username(item):
     return item.get("additional_information", None)
